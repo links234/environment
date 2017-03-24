@@ -152,6 +152,12 @@ imap <C-Down> <Down><Down><Down><Down><Down><Down><Down><Down><Down><Down>
 imap <C-Left> <ESC><Right>b<Left>a
 imap <C-Right> <ESC><Right>wi
 
+" ALT + Left/Right Arrow => Move to previous/next tab
+map <A-Left> :tabprev<CR>
+imap <A-Left> <ESC>:tabprev<CR>
+map <A-Right> :tabnext<CR>
+imap <A-Right> <ESC>:tabnext<CR>
+
 " CTRL + Z => Undo
 nnoremap <c-z> :u<CR>
 inoremap <c-z> <c-o>:u<CR>

@@ -1,0 +1,197 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'Valloric/YouCompleteMe'
+
+Plugin 'chriskempson/base16-vim'
+Plugin 'cohlin/vim-colorschemes'
+
+" NERD
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'scrooloose/nerdcommenter'
+
+
+" JavaScript
+Plugin 'pangloss/vim-javascript'
+Plugin 'MaxMEllon/vim-jsx-pretty'
+Plugin 'leshill/vim-json'
+
+" TagBar
+Plugin 'majutsushi/tagbar'
+
+" Folding
+Plugin 'pseewald/vim-anyfold'
+
+" Git
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
+
+" CSS
+Plugin 'skammer/vim-css-color'
+
+" Bookmark
+Plugin 'MattesGroeger/vim-bookmarks'
+
+" Console
+Plugin 'lrvick/Conque-Shell'
+
+
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'itchyny/lightline.vim'
+
+Plugin 'vim-scripts/SearchComplete'
+Plugin 'ervandew/supertab'
+
+Plugin 'tpope/vim-endwise'
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+" Display NERDTree hidden files
+let NERDTreeShowHidden = 1
+
+" Allways start with NERDTree
+let g:nerdtree_tabs_open_on_console_startup = 1
+
+" Global YCM file because it's fun
+let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+
+" Airline theme
+let g:airline_theme = "darcula"
+    
+" Vim colorscheme
+let g:colors_name = "py-darcula"
+
+" Set color stuff
+let base16colorspace=256
+
+set wildmenu
+set wildmode=longest:full,full
+set noswapfile
+
+" Some indentation rules
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set shiftround
+set smarttab
+set autoindent
+set smartindent
+set invnumber
+set wrap
+
+set mouse=a
+set splitbelow
+set splitright
+set autoread
+
+syntax on
+
+autocmd VimEnter * tabnew
+autocmd VimEnter * ConqueTerm bash
+autocmd VimEnter * wincmd p
+autocmd VimEnter * tabprev
+
+" CTRL + Arrows in ESC => Navigate across windows
+nnoremap <silent> <C-Left>  <C-W>h
+nnoremap <silent> <C-Down>  <C-W>j
+nnoremap <silent> <C-Up>    <C-W>k
+nnoremap <silent> <C-Right> <C-W>l
+
+" Wrap left of line to right of previous line
+set whichwrap+=<,>,h,l,[,]
+
+" Move paste toggle to Ctrl + B
+set pastetoggle=<C-b>
+
+" Basic mappings
+" keep this here, legacy shit
+" F2 => Save
+map <F2> :w<CR>i
+imap <F2> <Esc>:w<Cr>i<Right>
+
+" CTRL + S => Save
+map <C-s> :w<CR>i
+imap <C-s> <Esc>:w<CR>i<Right>
+
+" CTRL + W => Close current Tab
+map <C-w> :q <CR>
+imap <C-w> <ESC>:q <CR>i
+
+" F3 => Previous Tab
+map <F3> :tabprev<CR>
+imap <F3> <ESC>:tabprev<CR>i
+
+" F4 => Next Tab
+map <F4> :tabnext<CR>
+imap <F4> <ESC>:tabnext<CR>i
+
+" Do you really want to press <F5>? no .. you don't
+imap <F1> <ESC>i
+imap <F5> <ESC>i
+imap <F6> <ESC>i
+imap <F7> <ESC>i
+
+" F10 => Open in gedit
+map <F10> :!gedit % & <CR>i
+imap <F10> <ESC>:!gedit % & <CR>i
+
+" CTRL + Up/Down => Jump 10 lines
+imap <C-Up> <Up><Up><Up><Up><Up><Up><Up><Up><Up><Up>
+imap <C-Down> <Down><Down><Down><Down><Down><Down><Down><Down><Down><Down>
+
+" CTRL + Left/Right Arrow => Move to previous/next token
+imap <C-Left> <ESC><Right>b<Left>a
+imap <C-Right> <ESC><Right>wi
+
+" CTRL + Z => Undo
+nnoremap <c-z> :u<CR>
+inoremap <c-z> <c-o>:u<CR>
+
+" F8 => clean
+map <F8> :!clear<CR>i
+imap <F8> <ESC>:!clear<CR>i
+
+" CTRL + T => New Tab
+nnoremap <C-t> :tabnew<cr>
+
+" CTRL + B => Previous Tab
+nnoremap <C-b> :tabprev<cr>
+
+" CTRL + N => Next Tab
+nnoremap <C-n> :tabnext<cr>
+
+" F3 => Previous Tab
+map <F3> :tabprev<CR>
+imap <F3> <ESC>:tabprev<CR>i
+
+" F4 => Next Tab
+map <F4> :tabnext<CR>
+imap <F4> <ESC>:tabnext<CR>i
+
+
+" C/C++ compilation
+autocmd FileType c setlocal makeprg=gcc\ -g\ -O2\ -Wall\ %\ -o\ _%<\ -lm
+autocmd FileType cpp setlocal makeprg=g++\ -std=c++14\ -O2\ -Wall\ %\ -o\ _%<\ -lm
+
+autocmd FileType c,cpp map <buffer> <F8> :!clear<CR>:make!<CR>
+autocmd FileType c,cpp imap <buffer> <F8> <ESC>:!clear<CR>:make!<CR>
+
+imap <F9> <ESC> <F9>
+
+" Running C/ C++
+autocmd FileType c,cpp map <buffer> <F9> :!clear<CR>:make!<cr>:!time ./_%< <CR>
+
+" Running Python
+autocmd FileType python map <buffer> <F9> :!clear<CR>:!time python3 % <CR>
+
+" Running Bash
+autocmd FileType bash,sh map <buffer> <F9> :!clear<CR>:!time ./% <CR>

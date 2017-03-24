@@ -1,0 +1,126 @@
+export latest_path=""
+export num_without_path=0
+export show_path_once_every=1
+
+clear() {
+    num_without_path=5
+    /usr/bin/clear
+}
+
+ParseGitBranch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+ShortPwd() {
+    case $PWD in
+        $HOME) HPWD="~";;
+        $HOME/*/*) HPWD="${PWD#"${PWD%/*/*}/"}";;
+        $HOME/*) HPWD="~/${PWD##*/}";;
+        /*/*/*) HPWD="${PWD#"${PWD%/*/*}/"}";;
+        *) HPWD="$PWD";;
+    esac; 
+    echo $HPWD
+}
+
+GetPS() {
+    if [[ "$PWD" == "$latest_path" && $((num_without_path)) < $((show_path_once_every-1)) ]];
+    then
+        num_without_path=$((num_without_path+1))
+        PS1="$ "
+    else
+        num_without_path=0
+        latest_path=$PWD
+        PS1='\u@\h\[\033[32m\]:$(ShortPwd)\[\033[33m\]$(ParseGitBranch)\[\033[00m\] $ '
+    fi
+}
+
+PROMPT_COMMAND='GetPS'
+
+title() {
+    PROMPT_COMMAND='echo -ne "\033]0;'$1'\007"'
+}
+
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+stty -ixon #ubuntu allows control-s and shit
+
+alias vgrind="valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all"
+alias 5="md5"
+alias shitSlow="pkill -15 -u malex"
+alias ll="ls -Al"
+alias size="ls -lR | awk '{s+=$5} END {print s}'"
+
+sudo() {
+    echo "The Doors of Durin, Lord of Moria. Speak, friend, and enter."
+    command sudo "$@"
+}
+
+extract () {
+     if [ -f $1 ] ; then
+         case $1 in
+             *.tar.bz2)   tar xjf $1        ;;
+             *.tar.gz)    tar xzf $1     ;;
+             *.bz2)       bunzip2 $1       ;;
+             *.rar)       rar x $1     ;;
+             *.gz)        gunzip $1     ;;
+             *.tar)       tar xf $1        ;;
+             *.tbz2)      tar xjf $1      ;;
+             *.tgz)       tar xzf $1       ;;
+             *.zip)       unzip $1     ;;
+             *.Z)         uncompress $1  ;;
+             *.7z)        7z x $1    ;;
+             *)           echo "'$1' cannot be extracted via extract()" ;;
+         esac
+     else
+         echo "'$1' is not a valid file"
+     fi
+}
+
+#netinfo - shows network information for your system
+netinfo ()
+{
+echo "--------------- Network Information ---------------"
+/sbin/ifconfig | awk /'inet addr/ {print $2}'
+/sbin/ifconfig | awk /'Bcast/ {print $3}'
+/sbin/ifconfig | awk /'inet addr/ {print $4}'
+/sbin/ifconfig | awk /'HWaddr/ {print $4,$5}'
+myip=`lynx -dump -hiddenlinks=ignore -nolist http://checkip.dyndns.org:8245/ | sed '/^$/d; s/^[ ]*//g; s/[ ]*$//g' `
+echo "${myip}"
+echo "---------------------------------------------------"
+}
+
+#dirsize - finds directory sizes and lists them for the current directory
+dirsize ()
+{
+du -shx * .[a-zA-Z0-9_]* 2> /dev/null | \
+egrep '^ *[0-9.]*[MG]' | sort -n > /tmp/list
+egrep '^ *[0-9.]*M' /tmp/list
+egrep '^ *[0-9.]*G' /tmp/list
+rm -rf /tmp/list
+}
+
+alias csa="cd ~/work/CSAcademy/csacademy/"
+alias runserver="autossh -f -M 0 -N -L 15432:localhost:5432 root@linode-dev; autossh -f -M 0 -N -L 16379:localhost:6379 root@linode-dev; python manage.py runserver"
+
+export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+export HISTSIZE=100000                   # big big history
+export HISTFILESIZE=100000               # big big history
+shopt -s histappend                      # append to history, don't overwrite it
+
+# Save and reload the history after each command finishes
+# export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+viewmd() {
+    pandoc $1 | lynx -stdin    
+}
+
+comp() {
+    g++ -std=c++14 -O2 -Wall $1 -o _${1%%.*} -lm 
+}
+
+exec() {
+    g++ -std=c++14 -O2 -Wall $1 -o _${1%%.*} -lm 
+    time ./_${1%%.*}
+    rm _${1%%.*}
+}

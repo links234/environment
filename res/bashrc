@@ -51,6 +51,8 @@ alias shitSlow="pkill -15 -u malex"
 alias ll="ls -Al"
 alias size="ls -lR | awk '{s+=$5} END {print s}'"
 
+alias vin='nvim --cmd "source ~/.vimrc"'
+
 sudo() {
     echo "The Doors of Durin, Lord of Moria. Speak, friend, and enter."
     command sudo "$@"

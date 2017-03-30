@@ -9,7 +9,15 @@ echo "Installing vim ..."
 ./scripts/ask_copy.sh res/vimrc ~/.vimrc
 echo "Done!"
 
-echo "Installing vundle and plugins"
+echo "Installing gnome-terminal ..."
+./scripts/install_gnometerminal.sh
+echo "Done!"
+
+echo "Installing powerline fonts ..."
+./scripts/install_powerline_fonts.sh
+echo "Done!"
+
+echo "Installing vundle and plugins ..."
 ./scripts/install_vundle.sh
 ./scripts/install_plugins.sh
 echo "Done!"

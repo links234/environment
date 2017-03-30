@@ -11,5 +11,8 @@ if [ ! -d /usr/lib/python2.7/config-x86_64-linux-gnu ]; then
     sudo apt install python-dev
 fi
 
-cd ~/.vim/bundle/YouCompleteMe
-sudo ./install.py --clang-completer
+if [ ! -d ~/.vim/external/YouCompleteMe ]; then
+    cd ~/.vim/bundle/YouCompleteMe
+    sudo ./install.py --clang-completer
+    mkdir -p ~/.vim/external/YouCompleteMe
+fi

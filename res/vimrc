@@ -8,6 +8,8 @@ Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'Valloric/YouCompleteMe'
 
+" Colorschemes
+Plugin 'godlygeek/csapprox'
 Plugin 'chriskempson/base16-vim'
 Plugin 'cohlin/vim-colorschemes'
 
@@ -17,11 +19,20 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'scrooloose/nerdcommenter'
 
+" base16-apathy
+
+" AirLine & TabLine
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'mkitt/tabline.vim'
 
 " JavaScript
 Plugin 'pangloss/vim-javascript'
 Plugin 'MaxMEllon/vim-jsx-pretty'
 Plugin 'leshill/vim-json'
+
+" HTML
+Plugin 'alvan/vim-closetag'
 
 " TagBar
 Plugin 'majutsushi/tagbar'
@@ -42,35 +53,58 @@ Plugin 'MattesGroeger/vim-bookmarks'
 " Console
 Plugin 'lrvick/Conque-Shell'
 
+" Python
+Plugin 'sentientmachine/Pretty-Vim-Python'
+Plugin 'vim-scripts/django.vim'
 
+" Press <Leader> + D (\d)
+Plugin 'davidhalter/jedi-vim'
+
+" Navigation - press CTRL + P
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'itchyny/lightline.vim'
 
-Plugin 'vim-scripts/SearchComplete'
-Plugin 'ervandew/supertab'
-
+" Others 
 Plugin 'tpope/vim-endwise'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+" NERDTree settings
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+let g:NERDTreeShowGitStatus = 1
+let g:NERDTreeUpdateOnWrite = 1
+let g:NERDTreeShowIgnoredStatus = 1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
 " Display NERDTree hidden files
 let NERDTreeShowHidden = 1
-
 " Allways start with NERDTree
 let g:nerdtree_tabs_open_on_console_startup = 1
 
 " Global YCM file because it's fun
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+" Fix Python Path (for YCM)
+let g:ycm_path_to_python_interpreter="/usr/bin/python"
 
 " Airline theme
-let g:airline_theme = "darcula"
-    
+let g:airline_theme = "base16_apathy"
+
 " Vim colorscheme
-let g:colors_name = "py-darcula"
+let g:colors_name = "base16-apathy"
+colo base16-apathy
 
 " Set color stuff
-let base16colorspace=256
+" let base16colorspace=256
 
 set wildmenu
 set wildmode=longest:full,full
@@ -100,11 +134,56 @@ autocmd VimEnter * ConqueTerm bash
 autocmd VimEnter * wincmd p
 autocmd VimEnter * tabprev
 
+" True color
+if has("termguicolors")
+    set termguicolors
+endif
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+" Airline settings
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline#extensions#tabline#enabled = 1
+" Airline unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+" Airline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+
 " CTRL + Arrows in ESC => Navigate across windows
 nnoremap <silent> <C-Left>  <C-W>h
 nnoremap <silent> <C-Down>  <C-W>j
 nnoremap <silent> <C-Up>    <C-W>k
 nnoremap <silent> <C-Right> <C-W>l
+
+" Search as you type
+set incsearch
+vnoremap / /\v
+vnoremap ? ?\v
+
+" Long wrapping lines
+imap <silent> <Down> <C-o>gj
+imap <silent> <Up> <C-o>gk
+nmap <silent> <Down> gj
+nmap <silent> <Up> gk
 
 " Wrap left of line to right of previous line
 set whichwrap+=<,>,h,l,[,]
@@ -118,13 +197,24 @@ set pastetoggle=<C-b>
 map <F2> :w<CR>i
 imap <F2> <Esc>:w<Cr>i<Right>
 
+" CTRL + B in insert mode => Go to definition
+imap <C-b> <Leader>d
+
 " CTRL + S => Save
 map <C-s> :w<CR>i
 imap <C-s> <Esc>:w<CR>i<Right>
 
-" CTRL + W => Close current Tab
+" CTRL + W => Close current buffer
 map <C-w> :q <CR>
 imap <C-w> <ESC>:q <CR>i
+
+" CTRL + Q => Close force current buffer
+map <C-q> :q! <CR>
+imap <C-q> <ESC>:q! <CR>i
+
+" SHIFT + CTRL + Q => Close force everything
+map <C-S-q> :qa! <CR>
+imap <C-S-q> <ESC>:qa! <CR>i
 
 " F3 => Previous Tab
 map <F3> :tabprev<CR>

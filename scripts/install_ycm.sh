@@ -14,5 +14,5 @@ fi
 if [ ! -d ~/.vim/external/YouCompleteMe ]; then
     cd ~/.vim/bundle/YouCompleteMe
     sudo ./install.py --clang-completer
-    mkdir -p ~/.vim/external/YouCompleteMe
+    mkdir -p ~/.vim/external/YouCompleteMte
 fi

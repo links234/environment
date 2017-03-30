@@ -19,8 +19,6 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'scrooloose/nerdcommenter'
 
-" base16-apathy
-
 " AirLine & TabLine
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -224,11 +222,9 @@ imap <F3> <ESC>:tabprev<CR>i
 map <F4> :tabnext<CR>
 imap <F4> <ESC>:tabnext<CR>i
 
-" Do you really want to press <F5>? no .. you don't
-imap <F1> <ESC>i
-imap <F5> <ESC>i
-imap <F6> <ESC>i
-imap <F7> <ESC>i
+" F5 => Refresh NERDTree and CtrlP
+imap <F5> <ESC>:NERDTreeFocus<CR>r<C-w><C-p>:CtrlPClearCache<CR>i
+nmap <F5> :NERDTreeFocus<CR>r<C-w><C-p>:CtrlPClearCache<CR>
 
 " F10 => Open in gedit
 map <F10> :!gedit % & <CR>i
@@ -249,30 +245,25 @@ map <A-Right> :tabnext<CR>
 imap <A-Right> <ESC>:tabnext<CR>
 
 " CTRL + Z => Undo
-nnoremap <c-z> :u<CR>
-inoremap <c-z> <c-o>:u<CR>
+nnoremap <C-z> :u<CR>
+inoremap <C-z> <c-o>:u<CR>
 
 " F8 => clean
 map <F8> :!clear<CR>i
 imap <F8> <ESC>:!clear<CR>i
 
 " CTRL + T => New Tab
-nnoremap <C-t> :tabnew<cr>
+nnoremap <C-t> :tabnew<CR>
 
 " CTRL + B => Previous Tab
-nnoremap <C-b> :tabprev<cr>
+nnoremap <C-b> :tabprev<CR>
 
 " CTRL + N => Next Tab
-nnoremap <C-n> :tabnext<cr>
+nnoremap <C-n> :tabnext<CR>
 
-" F3 => Previous Tab
-map <F3> :tabprev<CR>
-imap <F3> <ESC>:tabprev<CR>i
-
-" F4 => Next Tab
-map <F4> :tabnext<CR>
-imap <F4> <ESC>:tabnext<CR>i
-
+" ALT + N => Toggle NERDTree
+nmap <A-n> :NERDTreeToggle<CR>
+imap <A-n> <ESC>:NERDTreeToggle<CR>i
 
 " C/C++ compilation
 autocmd FileType c setlocal makeprg=gcc\ -g\ -O2\ -Wall\ %\ -o\ _%<\ -lm
